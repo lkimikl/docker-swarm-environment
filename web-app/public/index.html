@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker Swarm Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-left">
+                <div class="logo">
+                    <i class="fas fa-layer-group"></i>
+                    <h1>Docker Swarm Environment</h1>
+                </div>
+                <p class="subtitle">Кластерная тестовая среда для веб-приложений</p>
+            </div>
+            <div class="header-right">
+                <div class="status-badge active">
+                    <i class="fas fa-circle"></i>
+                    <span>Swarm Active</span>
+                </div>
+                <div class="time" id="current-time">--:--:--</div>
+            </div>
+        </header>
+
+        <!-- Services Status -->
+        <section class="section">
+            <h2><i class="fas fa-server"></i> Состояние сервисов</h2>
+            <div class="cards-grid">
+                <div class="card" id="web-app-card">
+                    <div class="card-header">
+                        <i class="fas fa-globe"></i>
+                        <h3>Веб-приложение</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="status-indicator loading">
+                            <span class="status-dot"></span>
+                            <span class="status-text">Проверка...</span>
+                        </div>
+                        <div class="stats">
+                            <div class="stat">
+                                <span class="stat-label">Реплики:</span>
+                                <span class="stat-value">3</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Хост:</span>
+                                <span class="stat-value">web</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-test" onclick="testEndpoint('web')">
+                            <i class="fas fa-bolt"></i> Тест
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card" id="nginx-card">
+                    <div class="card-header">
+                        <i class="fas fa-exchange-alt"></i>
+                        <h3>Nginx</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="status-indicator loading">
+                            <span class="status-dot"></span>
+                            <span class="status-text">Проверка...</span>
+                        </div>
+                        <div class="stats">
+                            <div class="stat">
+                                <span class="stat-label">Реплики:</span>
+                                <span class="stat-value">2</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Порт:</span>
+                                <span class="stat-value">80</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-test" onclick="testEndpoint('nginx')">
+                            <i class="fas fa-bolt"></i> Тест
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card" id="db-card">
+                    <div class="card-header">
+                        <i class="fas fa-database"></i>
+                        <h3>PostgreSQL</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="status-indicator loading">
+                            <span class="status-dot"></span>
+                            <span class="status-text">Проверка...</span>
+                        </div>
+                        <div class="stats">
+                            <div class="stat">
+                                <span class="stat-label">Реплики:</span>
+                                <span class="stat-value">1</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Порт:</span>
+                                <span class="stat-value">5432</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-test" onclick="testEndpoint('db')">
+                            <i class="fas fa-bolt"></i> Тест
+                        </button>
+                    </div>
+                </div>
+
+                <div class="card" id="redis-card">
+                    <div class="card-header">
+                        <i class="fas fa-bolt"></i>
+                        <h3>Redis</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="status-indicator loading">
+                            <span class="status-dot"></span>
+                            <span class="status-text">Проверка...</span>
+                        </div>
+                        <div class="stats">
+                            <div class="stat">
+                                <span class="stat-label">Реплики:</span>
+                                <span class="stat-value">2</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Порт:</span>
+                                <span class="stat-value">6379</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <button class="btn btn-test" onclick="testEndpoint('redis')">
+                            <i class="fas fa-bolt"></i> Тест
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Monitoring -->
+        <section class="section">
+            <h2><i class="fas fa-chart-line"></i> Мониторинг</h2>
+            <div class="monitoring-grid">
+                <div class="monitoring-card">
+                    <div class="monitoring-header">
+                        <i class="fas fa-chart-bar"></i>
+                        <h3>Prometheus</h3>
+                    </div>
+                    <p>Сбор метрик кластера</p>
+                    <a href="http://localhost:9090" target="_blank" class="btn btn-link">
+                        <i class="fas fa-external-link-alt"></i> Панель
+                    </a>
+                </div>
+
+                <div class="monitoring-card">
+                    <div class="monitoring-header">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <h3>Grafana</h3>
+                    </div>
+                    <p>Визуализация Swarm</p>
+                    <a href="http://localhost:3001" target="_blank" class="btn btn-link">
+                        <i class="fas fa-external-link-alt"></i> Дашборды
+                    </a>
+                </div>
+
+                <div class="monitoring-card">
+                    <div class="monitoring-header">
+                        <i class="fas fa-code-branch"></i>
+                        <h3>Swarm Info</h3>
+                    </div>
+                    <div class="quick-links">
+                        <button class="quick-link" onclick="showSwarmNodes()">Ноды</button>
+                        <button class="quick-link" onclick="showSwarmServices()">Сервисы</button>
+                        <button class="quick-link" onclick="showSwarmTasks()">Задачи</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Swarm Statistics -->
+        <section class="section">
+            <h2><i class="fas fa-network-wired"></i> Swarm Статистика</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-cube"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h4>Сервисы</h4>
+                        <div class="stat-value">6</div>
+                        <div class="stat-trend">в кластере</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-boxes"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h4>Реплики</h4>
+                        <div class="stat-value" id="total-replicas">11</div>
+                        <div class="stat-trend">контейнеров</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h4>Запросы БД</h4>
+                        <div class="stat-value" id="db-requests">0</div>
+                        <div class="stat-trend">сегодня</div>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="stat-content">
+                        <h4>Хиты кэша</h4>
+                        <div class="stat-value" id="cache-hits">0</div>
+                        <div class="stat-trend">всего</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- System Info -->
+        <section class="section">
+            <h2><i class="fas fa-info-circle"></i> Информация о системе</h2>
+            <div class="info-card">
+                <div class="info-row">
+                    <span class="info-label">Окружение:</span>
+                    <span class="info-value" id="node-env">Docker Swarm</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Хостнейм:</span>
+                    <span class="info-value" id="hostname">Загрузка...</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Аптайм:</span>
+                    <span class="info-value" id="uptime">0s</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Дата запуска:</span>
+                    <span class="info-value" id="start-time">Загрузка...</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Docker Swarm Environment v2.0 | Swarm, Node.js, PostgreSQL, Redis, Nginx, Prometheus, Grafana</p>
+            <p class="footer-links">
+                <a href="#" onclick="refreshAll()"><i class="fas fa-sync-alt"></i> Обновить</a>
+                |
+                <a href="#" onclick="scaleService()"><i class="fas fa-expand-alt"></i> Масштабировать</a>
+                |
+                <a href="#" onclick="showSwarmCommands()"><i class="fas fa-terminal"></i> Команды Swarm</a>
+            </p>
+        </footer>
+    </div>
+
+    <!-- Swarm Info Modal -->
+    <div id="swarm-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-network-wired"></i> Docker Swarm Информация</h3>
+                <button class="close-modal" onclick="closeSwarmModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <pre id="swarm-content">Загрузка информации о Swarm...</pre>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

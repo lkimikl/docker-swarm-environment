@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - DB_HOST=localhost
+      - REDIS_HOST=localhost
+      - NODE_ENV=development
+    volumes:
+      - ./web-app:/app
+      - /app/node_modules
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_PASSWORD: password123
+
+  cache:
+    image: redis:alpine
