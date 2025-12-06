@@ -23,10 +23,7 @@ services:
   nginx:
     image: nginx:alpine
     ports:
-      - target: 80
-        published: 80
-        protocol: tcp
-        mode: host
+      - "80:80"
     configs:
       - source: nginx_config
         target: /etc/nginx/nginx.conf
@@ -90,9 +87,7 @@ services:
   prometheus:
     image: prom/prometheus:latest
     ports:
-      - target: 9090
-        published: 9090
-        protocol: tcp
+      - "9090:9090"
     configs:
       - source: prometheus_config
         target: /etc/prometheus/prometheus.yml
@@ -107,9 +102,7 @@ services:
   grafana:
     image: grafana/grafana-oss:latest
     ports:
-      - target: 3000
-        published: 3001
-        protocol: tcp
+      - "3001:3000"
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_INSTALL_PLUGINS=grafana-piechart-panel
