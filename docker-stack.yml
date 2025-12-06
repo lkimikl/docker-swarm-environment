@@ -1,12 +1,10 @@
 version: '3.8'
 
-# СЕТИ (overlay для Swarm)
 networks:
   test-net:
     driver: overlay
     attachable: true
 
-# ТОМА (хранилища)
 volumes:
   postgres_data:
     driver: local
@@ -15,16 +13,13 @@ volumes:
   grafana_data:
     driver: local
 
-# КОНФИГУРАЦИИ (только для Swarm)
 configs:
   nginx_config:
     file: ./nginx/nginx.conf
   prometheus_config:
     file: ./prometheus/prometheus.yml
 
-# СЕРВИСЫ
 services:
-  # 1. NGINX (веб-сервер, прокси)
   nginx:
     image: nginx:alpine
     ports:
@@ -46,9 +41,8 @@ services:
     networks:
       - test-net
 
-  # 2. WEB APP (наше приложение с фронтендом)
   web:
-    image: test-environment-web:latest  # Локальный образ
+    image: test-environment-web:latest
     deploy:
       mode: replicated
       replicas: 3
@@ -70,7 +64,6 @@ services:
     networks:
       - test-net
 
-  # 3. DATABASE (PostgreSQL)
   db:
     image: postgres:15-alpine
     environment:
@@ -82,13 +75,9 @@ services:
     deploy:
       mode: replicated
       replicas: 1
-      # placement:  
-      #   constraints:
-      #     - node.labels.type == database
     networks:
       - test-net
 
-  # 4. CACHE (Redis)
   cache:
     image: redis:7-alpine
     command: redis-server --appendonly yes
@@ -98,7 +87,6 @@ services:
     networks:
       - test-net
 
-  # 5. MONITORING (Prometheus)
   prometheus:
     image: prom/prometheus:latest
     ports:
@@ -116,7 +104,6 @@ services:
     networks:
       - test-net
 
-  # 6. MONITORING (Grafana)
   grafana:
     image: grafana/grafana-oss:latest
     ports:

@@ -1,9 +1,7 @@
-// Глобальные переменные
 let refreshInterval;
 let cacheHits = 0;
 let dbRequests = 0;
 
-// Обновление времени
 function updateTime() {
     const now = new Date();
     const timeString = now.toLocaleTimeString('ru-RU', {
@@ -14,13 +12,12 @@ function updateTime() {
     document.getElementById('current-time').textContent = timeString;
 }
 
-// Проверка статуса сервисов
 async function checkServiceStatus() {
     const services = [
         { id: 'web-app', endpoint: '/health', name: 'Веб-приложение' },
         { id: 'db', endpoint: '/db', name: 'PostgreSQL' },
         { id: 'redis', endpoint: '/cache', name: 'Redis' },
-        { id: 'nginx', endpoint: '/health', name: 'Nginx' } // Исправлено!
+        { id: 'nginx', endpoint: '/health', name: 'Nginx' }
     ];
 
     for (const service of services) {
@@ -58,12 +55,11 @@ async function checkServiceStatus() {
     }
 }
 
-// Тест эндпоинта
 async function testEndpoint(type) {
     const endpoints = {
         web: '/health',
         nginx: '/health',
-        db: '/db',      // Этот тест ПАДАЕТ с ошибкой
+        db: '/db',
         redis: '/cache'
     };
     
@@ -77,7 +73,6 @@ async function testEndpoint(type) {
         const response = await fetch(endpoints[type]);
         const data = await response.json();
         
-        // ЕСЛИ ЭТО ТЕСТ БД И ЕСТЬ ОШИБКА - ПОКАЖИ ПРАВДУ
         if (type === 'db' && data.error) {
             alert(`❌ БАЗА ДАННЫХ НЕ РАБОТАЕТ!\n\nОшибка: ${data.error}\n\nБаза данных PostgreSQL не запущена.`);
         } else {
@@ -91,7 +86,6 @@ async function testEndpoint(type) {
     }
 }
 
-// Загрузка информации о системе
 async function loadSystemInfo() {
     try {
         const response = await fetch('/info');
@@ -100,11 +94,9 @@ async function loadSystemInfo() {
         document.getElementById('hostname').textContent = truncateText(data.hostname || 'swarm-node', 20);
         document.getElementById('hostname').title = data.hostname;
         
-        // Аптайм
         const uptime = Math.floor(data.uptime || 0);
         document.getElementById('uptime').textContent = formatUptime(uptime);
         
-        // Время запуска
         const startTime = new Date(Date.now() - (uptime * 1000));
         const timeString = startTime.toLocaleString('ru-RU');
         document.getElementById('start-time').textContent = truncateText(timeString, 25);
@@ -114,13 +106,11 @@ async function loadSystemInfo() {
     }
 }
 
-// Обновление статистики
 function updateStats() {
     document.getElementById('db-requests').textContent = dbRequests;
     document.getElementById('cache-hits').textContent = cacheHits;
 }
 
-// Форматирование аптайма
 function formatUptime(seconds) {
     const days = Math.floor(seconds / 86400);
     const hours = Math.floor((seconds % 86400) / 3600);
@@ -133,21 +123,18 @@ function formatUptime(seconds) {
     return `${secs}s`;
 }
 
-// Обрезка текста
 function truncateText(text, maxLength = 20) {
     if (!text) return 'N/A';
     if (text.length <= maxLength) return text;
     return text.substring(0, maxLength) + '...';
 }
 
-// Обновить всё
 function refreshAll() {
     checkServiceStatus();
     loadSystemInfo();
     updateStats();
 }
 
-// Показать информацию о Swarm
 function showSwarmNodes() {
     const info = `=== Docker Swarm Ноды ===\n\n` +
                 `Для просмотра выполните в терминале:\n` +
@@ -226,7 +213,6 @@ function showSwarmCommands() {
     document.getElementById('swarm-modal').style.display = 'flex';
 }
 
-// Инициализация
 document.addEventListener('DOMContentLoaded', function() {
     updateTime();
     setInterval(updateTime, 1000);
@@ -244,7 +230,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Предотвращение поведения ссылок
 document.querySelectorAll('a[href="#"]').forEach(link => {
     link.addEventListener('click', e => e.preventDefault());
 });

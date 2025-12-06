@@ -14,19 +14,16 @@ jobs:
       
     - name: Verify project structure
       run: |
-        echo "🔍 Verifying project files..."
         ls -la
         
         echo ""
-        echo "📁 Required files check:"
-        if [ -f "docker-stack.yml" ]; then echo "✅ docker-stack.yml - OK"; else echo "❌ docker-stack.yml - MISSING"; exit 1; fi
-        if [ -f "Dockerfile" ]; then echo "✅ Dockerfile - OK"; else echo "❌ Dockerfile - MISSING"; exit 1; fi
-        if [ -d "nginx" ]; then echo "✅ nginx/ - OK"; else echo "❌ nginx/ - MISSING"; exit 1; fi
-        if [ -d "web-app" ]; then echo "✅ web-app/ - OK"; else echo "❌ web-app/ - MISSING"; exit 1; fi
+        if [ -f "docker-stack.yml" ]; then echo "docker-stack.yml - OK"; else echo "docker-stack.yml - MISSING"; exit 1; fi
+        if [ -f "Dockerfile" ]; then echo "Dockerfile - OK"; else echo "Dockerfile - MISSING"; exit 1; fi
+        if [ -d "nginx" ]; then echo "nginx/ - OK"; else echo "nginx/ - MISSING"; exit 1; fi
+        if [ -d "web-app" ]; then echo "web-app/ - OK"; else echo "web-app/ - MISSING"; exit 1; fi
         
     - name: Simulate Docker build
       run: |
-        echo "🐳 Simulating Docker build process..."
         echo "Command that would run: docker build -t swarm-test-environment:latest ."
         echo ""
         echo "Build steps:"
@@ -35,13 +32,9 @@ jobs:
         echo "3. Copy application code"
         echo "4. Set up working directory"
         echo "5. Configure startup command"
-        echo ""
-        echo "✅ Docker build simulation complete"
         
     - name: Validate Docker Swarm configuration
       run: |
-        echo "🏗️ Validating Swarm configuration..."
-        echo ""
         echo "docker-stack.yml analysis:"
         echo "- Services defined: 6"
         echo "- Network: overlay (test-net)"
@@ -61,10 +54,8 @@ jobs:
         
     - name: Simulate Swarm deployment
       run: |
-        echo "🚀 Simulating Docker Swarm deployment..."
-        echo ""
         echo "Deployment commands sequence:"
-        echo "1. docker swarm init                     # Initialize Swarm"
+        echo "1. docker swarm init"
         echo "2. docker config create nginx_config ./nginx/nginx.conf"
         echo "3. docker stack deploy -c docker-stack.yml test-env"
         echo ""
@@ -76,34 +67,28 @@ jobs:
         echo "Creating service test-env_cache"
         echo "Creating service test-env_prometheus"
         echo "Creating service test-env_grafana"
-        echo ""
-        echo "✅ Swarm deployment simulation complete"
         
     - name: Generate deployment report
       run: |
-        echo "📊 Generating deployment report..."
-        
         cat > deployment-summary.md << 'EOF'
         # Docker Swarm Deployment Summary
         
         ## Deployment Information
-        - **Workflow:** Docker Swarm CI/CD
-        - **Status:** Simulation Successful
-        - **Timestamp:** $(date -u)
-        - **Trigger:** push to main branch
+        - Workflow: Docker Swarm CI/CD
+        - Status: Simulation Successful
+        - Timestamp: $(date -u)
+        - Trigger: push to main branch
         
         ## Project Structure
-        ```
         docker-swarm-environment/
-        ├── docker-stack.yml          # Swarm configuration
-        ├── Dockerfile                # Application build
-        ├── nginx/nginx.conf          # Web server config
-        ├── web-app/                  # Application code
+        ├── docker-stack.yml
+        ├── Dockerfile
+        ├── nginx/nginx.conf
+        ├── web-app/
         │   ├── index.js
         │   ├── package.json
-        │   └── public/ (Dashboard)
+        │   └── public/
         └── .github/workflows/swarm-ci-cd.yml
-        ```
         
         ## Services Configuration
         | Service | Replicas | Purpose |
@@ -116,9 +101,9 @@ jobs:
         | grafana | 1 | Monitoring visualization |
         
         ## Network Configuration
-        - **Type:** overlay network
-        - **Name:** test-env_test-net
-        - **Service Discovery:** DNS-based (web, db, cache)
+        - Type: overlay network
+        - Name: test-env_test-net
+        - Service Discovery: DNS-based (web, db, cache)
         
         ## Access Points
         - Dashboard: http://<host-ip>/
@@ -126,40 +111,29 @@ jobs:
         - Grafana: http://<host-ip>:3001 (admin/admin)
         
         ## Verification Commands
-        ```bash
-        # Check services status
         docker stack services test-env
-        
-        # View running containers
         docker stack ps test-env
-        
-        # Monitor application logs
         docker service logs test-env_web
-        ```
         
         ## Rollback Procedure
-        ```bash
         docker stack rm test-env
         docker swarm leave --force
-        ```
         
         EOF
         
-        echo "✅ Report saved to deployment-summary.md"
-        echo ""
-        cat deployment-summary.md | head -20
+        echo "Report saved to deployment-summary.md"
         
     - name: Complete CI/CD pipeline
       run: |
         echo ""
-        echo "🎉 CI/CD PIPELINE COMPLETED SUCCESSFULLY"
+        echo "CI/CD PIPELINE COMPLETED SUCCESSFULLY"
         echo "========================================="
         echo "All steps validated:"
-        echo "✅ Code checkout"
-        echo "✅ Project structure validation"
-        echo "✅ Docker build simulation"
-        echo "✅ Swarm configuration validation"
-        echo "✅ Deployment simulation"
-        echo "✅ Report generation"
+        echo "Code checkout"
+        echo "Project structure validation"
+        echo "Docker build simulation"
+        echo "Swarm configuration validation"
+        echo "Deployment simulation"
+        echo "Report generation"
         echo ""
         echo "The pipeline is ready for actual deployment to Docker Swarm."

@@ -6,7 +6,6 @@ const path = require('path');
 const app = express();
 const port = 3000;
 
-// Подключение к PostgreSQL
 const dbPool = new Pool({
     user: process.env.DB_USER || 'postgres',
     host: process.env.DB_HOST || 'db',
@@ -15,12 +14,10 @@ const dbPool = new Pool({
     port: 5432,
 });
 
-// Подключение к Redis
 const redisClient = redis.createClient({
     url: `redis://${process.env.REDIS_HOST || 'cache'}:6379`
 });
 
-// Статистика
 let requestCount = {
     db: 0,
     cache: 0,
@@ -36,11 +33,9 @@ let requestCount = {
     }
 })();
 
-// Middleware
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Роуты API
 app.get('/api/health', (req, res) => {
     requestCount.total++;
     res.json({
@@ -123,7 +118,6 @@ app.get('/api/stats', (req, res) => {
     });
 });
 
-// Совместимость со старыми роутами
 app.get('/health', (req, res) => {
     requestCount.total++;
     res.json({
@@ -177,7 +171,6 @@ app.get('/info', (req, res) => {
     });
 });
 
-// Главная страница
 app.get('/', (req, res) => {
     requestCount.total++;
     if (req.accepts('html')) {
@@ -196,7 +189,6 @@ app.get('/', (req, res) => {
     }
 });
 
-// Запуск сервера
 app.listen(port, () => {
     console.log("=".repeat(60));
     console.log("🚀 DOCKER SWARM ТЕСТОВАЯ СРЕДА ЗАПУЩЕНА!");
