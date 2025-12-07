@@ -24,7 +24,6 @@ docker swarm init
 
 # Проверить статус
 docker node ls
-# Должно показать: текущая нода как MANAGER
 
 # Создать конфигурации для сервисов
 docker config create nginx_config ./nginx/nginx.conf
