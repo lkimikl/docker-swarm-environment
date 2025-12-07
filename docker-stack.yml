@@ -28,29 +28,14 @@ services:
       - source: nginx_config
         target: /etc/nginx/nginx.conf
     deploy:
-      mode: replicated
-      replicas: 2
-      restart_policy:
-        condition: any
-      update_config:
-        parallelism: 1
-        delay: 10s
+      replicas: 1
     networks:
       - test-net
 
   web:
     image: test-environment-web:latest
     deploy:
-      mode: replicated
-      replicas: 3
-      restart_policy:
-        condition: on-failure
-      update_config:
-        parallelism: 1
-        delay: 10s
-      resources:
-        limits:
-          memory: 512M
+      replicas: 1
     environment:
       - NODE_ENV=production
       - DB_HOST=db
@@ -70,7 +55,6 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     deploy:
-      mode: replicated
       replicas: 1
     networks:
       - test-net
@@ -79,8 +63,7 @@ services:
     image: redis:7-alpine
     command: redis-server --appendonly yes
     deploy:
-      mode: replicated
-      replicas: 2
+      replicas: 1
     networks:
       - test-net
 
@@ -94,7 +77,6 @@ services:
     volumes:
       - prometheus_data:/prometheus
     deploy:
-      mode: replicated
       replicas: 1
     networks:
       - test-net
@@ -109,7 +91,6 @@ services:
     volumes:
       - grafana_data:/var/lib/grafana
     deploy:
-      mode: replicated
       replicas: 1
     networks:
       - test-net
