@@ -155,13 +155,13 @@ function showSwarmServices() {
                 `docker stack services test-env\n` +
                 `docker service ls\n\n` +
                 `Наш стек содержит 6 сервисов:\n` +
-                `1. nginx (2 реплики)\n` +
-                `2. web (3 реплики)\n` +
+                `1. nginx (1 реплика)\n` +
+                `2. web (1 реплика)\n` +
                 `3. db (1 реплика)\n` +
-                `4. cache (2 реплики)\n` +
+                `4. cache (1 реплика)\n` +
                 `5. prometheus (1 реплика)\n` +
                 `6. grafana (1 реплика)\n\n` +
-                `Всего: 10 реплик`;
+                `Всего: 6 реплик`;
     
     document.getElementById('swarm-content').textContent = info;
     document.getElementById('swarm-modal').style.display = 'flex';
