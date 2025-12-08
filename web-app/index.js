@@ -204,3 +204,34 @@ app.listen(port, () => {
     console.log(`Хостнейм: ${process.env.HOSTNAME || 'swarm-service'}`);
     console.log("=".repeat(60));
 });
+
+app.get('/metrics', (req, res) => {
+    requestCount.total++;
+    
+    
+    const metrics = `
+# HELP http_requests_total Total number of HTTP requests
+# TYPE http_requests_total counter
+http_requests_total{service="web-app"} ${requestCount.total}
+
+# HELP db_requests_total Total number of database requests
+# TYPE db_requests_total counter
+db_requests_total{service="web-app"} ${requestCount.db}
+
+# HELP cache_requests_total Total number of cache requests
+# TYPE cache_requests_total counter
+cache_requests_total{service="web-app"} ${requestCount.cache}
+
+# HELP nodejs_memory_usage_bytes Node.js memory usage
+# TYPE nodejs_memory_usage_bytes gauge
+nodejs_memory_usage_bytes{type="heapTotal"} ${process.memoryUsage().heapTotal}
+nodejs_memory_usage_bytes{type="heapUsed"} ${process.memoryUsage().heapUsed}
+
+# HELP nodejs_uptime_seconds Node.js process uptime
+# TYPE nodejs_uptime_seconds gauge
+nodejs_uptime_seconds ${process.uptime()}
+`;
+    
+    res.set('Content-Type', 'text/plain');
+    res.send(metrics);
+});
