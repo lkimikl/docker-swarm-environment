@@ -233,3 +233,5 @@ document.addEventListener('DOMContentLoaded', function() {
 document.querySelectorAll('a[href="#"]').forEach(link => {
     link.addEventListener('click', e => e.preventDefault());
 });
+
+refreshInterval = setInterval(checkServiceStatus, 30000);
