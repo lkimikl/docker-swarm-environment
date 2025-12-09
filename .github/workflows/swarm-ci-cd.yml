@@ -38,16 +38,16 @@ jobs:
         echo "docker-stack.yml analysis:"
         echo "- Services defined: 6"
         echo "- Network: overlay (test-net)"
-        echo "- Total replicas: 10"
+        echo "- Total replicas: 6"
         echo ""
         echo "Services breakdown:"
         echo "┌──────────────┬──────────┬──────────────────────────┐"
         echo "│ Service      │ Replicas │ Image                    │"
         echo "├──────────────┼──────────┼──────────────────────────┤"
-        echo "│ nginx        │ 2        │ nginx:alpine             │"
-        echo "│ web          │ 3        │ test-environment:latest  │"
+        echo "│ nginx        │ 1        │ nginx:alpine             │"
+        echo "│ web          │ 1        │ test-environment:latest  │"
         echo "│ db           │ 1        │ postgres:15-alpine       │"
-        echo "│ cache        │ 2        │ redis:7-alpine           │"
+        echo "│ cache        │ 1        │ redis:7-alpine           │"
         echo "│ prometheus   │ 1        │ prom/prometheus:latest   │"
         echo "│ grafana      │ 1        │ grafana/grafana-oss:latest │"
         echo "└──────────────┴──────────┴──────────────────────────┘"
@@ -93,10 +93,10 @@ jobs:
         ## Services Configuration
         | Service | Replicas | Purpose |
         |---------|----------|---------|
-        | nginx | 2 | Load balancing & reverse proxy |
-        | web | 3 | Node.js application with Dashboard |
+        | nginx | 1 | Load balancing & reverse proxy |
+        | web | 1 | Node.js application with Dashboard |
         | db | 1 | PostgreSQL database |
-        | cache | 2 | Redis caching |
+        | cache | 1 | Redis caching |
         | prometheus | 1 | Metrics collection |
         | grafana | 1 | Monitoring visualization |
         
